@@ -5,7 +5,7 @@ from movies.models import Movies
 
 
 class MoviesSerializer(serializers.Serializer):
-    ID = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField(read_only=True)
     movie_name = serializers.CharField()
     description = serializers.CharField()
     active = serializers.BooleanField()
