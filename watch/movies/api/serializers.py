@@ -10,9 +10,15 @@ def validate_length_of_field(value):
     if len(value) < 2:
         raise serializers.ValidationError("Length of field too short!!!")
 class MoviesSerializer(serializers.ModelSerializer):
+    
+    movie_name_length = serializers.SerializerMethodField()
     class Meta:
         model = Movies 
         fields = "__all__"        
+        
+    def get_movie_name_length(self, object):
+        return len(object.movie_name)
+    
     # Field level validation function start with validate_<field_name> look like below
     def validate_movie_name(self, value):
         if len(value) < 2:
