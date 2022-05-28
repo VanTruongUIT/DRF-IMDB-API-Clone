@@ -3,19 +3,36 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics, mixins
 
-from .serializers import StreamPlatformSerializer, WatchListSerializer
+from movies.models import Review
 
-
-
-class ListReview(APIView):
-    pass 
+from .serializers import ReviewSerializer, StreamPlatformSerializer, WatchListSerializer
 
 
-class DetailReview(APIView):
-    pass 
 
-class ListWatchList(APIView):
+class ReviewList(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+
+class ReviewDetail(mixins.RetrieveModelMixin,
+                   generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+class WatchListList(APIView):
     def get(self, request):
         watch_list = WatchList.objects.all()
 
@@ -34,7 +51,7 @@ class ListWatchList(APIView):
 
 
 
-class DetailWatchList(APIView):
+class WatchListDetail(APIView):
     
     def get(self, request, pk):
         try:
@@ -60,7 +77,7 @@ class DetailWatchList(APIView):
         watch_list.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)      
     
-class ListStreamFlatform(APIView):
+class StreamFlatformList(APIView):
     def get(self, request):
         stream_flatform = StreamPlatform.objects.all()
 
@@ -79,7 +96,7 @@ class ListStreamFlatform(APIView):
 
 
 
-class DetaiStreamPlatform(APIView):
+class StreamPlatformDetail(APIView):
     
     def get(self, request, pk):
         try:
