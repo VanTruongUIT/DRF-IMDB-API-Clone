@@ -1,12 +1,19 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from movies.models import StreamPlatform, WatchList
 from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from movies.models import WatchList
-from movies.models import StreamPlatform
 from .serializers import StreamPlatformSerializer, WatchListSerializer
 
+
+
+class ListReview(APIView):
+    pass 
+
+
+class DetailReview(APIView):
+    pass 
 
 class ListWatchList(APIView):
     def get(self, request):
@@ -57,7 +64,7 @@ class ListStreamFlatform(APIView):
     def get(self, request):
         stream_flatform = StreamPlatform.objects.all()
 
-        serializers = StreamPlatformSerializer(stream_flatform, many=True)
+        serializers = StreamPlatformSerializer(stream_flatform, many=True, context={'request': request})
         return Response(serializers.data)
 
 
@@ -81,7 +88,7 @@ class DetaiStreamPlatform(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)        
         
         if request.method == "GET":
-            serializer = StreamPlatformSerializer(stream_flatform)
+            serializer = StreamPlatformSerializer(stream_flatform, context={'request': request})
             return Response(serializer.data)
     
     def put(self, request, pk):
