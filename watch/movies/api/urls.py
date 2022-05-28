@@ -13,8 +13,8 @@ from .views import (
 urlpatterns = [
     path("list/", ListWatchList.as_view(), name="watchlist-list"),   
     path("<int:pk>", DetailWatchList.as_view(), name="watchlist-detail"),   
-    path("stream-flatforms/", ListStreamFlatform.as_view(), name="streamflatform-list"),   
-    path("stream-flatforms/<int:pk>", DetaiStreamPlatform.as_view(), name="streamflatform-detail"),   
+    path("stream-platforms/", ListStreamFlatform.as_view(), name="streamflatform-list"),   
+    path("stream-platforms/<int:pk>", DetaiStreamPlatform.as_view(), name="streamflatform-detail"),   
 ]
 
 

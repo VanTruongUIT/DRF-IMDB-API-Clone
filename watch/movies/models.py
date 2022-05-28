@@ -13,6 +13,8 @@ class StreamPlatform(models.Model):
 class WatchList(models.Model):
     title = models.CharField(max_length=200)
     storyline = models.CharField(max_length=200)
+    # Add foreign key to StreamPlatform: one to many relationship.
+    stream_platform = models.ForeignKey(StreamPlatform, on_delete=models.CASCADE, related_name="watchlist")
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
