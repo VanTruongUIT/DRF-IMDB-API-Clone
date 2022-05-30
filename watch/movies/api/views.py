@@ -11,26 +11,17 @@ from .serializers import ReviewSerializer, StreamPlatformSerializer, WatchListSe
 
 
 
-class ReviewList(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  generics.GenericAPIView):
+class ReviewList(generics.ListCreateAPIView):
+    """Using concrete Class base view to handle the get, post, update, delete request quickly
+    If you want to customize your code, you can override it"""
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
     
-
-class ReviewDetail(mixins.RetrieveModelMixin,
-                   generics.GenericAPIView):
+    
+class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
 class WatchListList(APIView):
     def get(self, request):
@@ -48,7 +39,6 @@ class WatchListList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
                 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)       
-
 
 
 class WatchListDetail(APIView):
@@ -77,6 +67,7 @@ class WatchListDetail(APIView):
         watch_list.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)      
     
+    
 class StreamFlatformList(APIView):
     def get(self, request):
         stream_flatform = StreamPlatform.objects.all()
@@ -93,7 +84,6 @@ class StreamFlatformList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
                 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)       
-
 
 
 class StreamPlatformDetail(APIView):
