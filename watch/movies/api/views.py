@@ -1,3 +1,4 @@
+from xml.dom import NotFoundErr
 from movies.models import StreamPlatform, WatchList
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -5,17 +6,40 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
 
+from structlog import get_logger
+
 from movies.models import Review
 
 from .serializers import ReviewSerializer, StreamPlatformSerializer, WatchListSerializer
 
 
 
-class ReviewList(generics.ListCreateAPIView):
+log = get_logger()
+class ReviewCreate(generics.CreateAPIView):
+    serializer_class = ReviewSerializer
+    
+    def perform_create(self, serializer):
+        # get pk from url of movie
+        pk = self.kwargs.get('pk')
+        # get the movie that have pk is pk
+        
+        watchlist = WatchList.objects.get(pk=pk)
+        log.info(f"truongtv16: {watchlist}")
+
+        serializer.save(watchlist=watchlist)
+
+class ReviewList(generics.ListAPIView):
     """Using concrete Class base view to handle the get, post, update, delete request quickly
     If you want to customize your code, you can override it"""
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    
+    def get_queryset(self):
+        # get pk from url in browser, it mapping with <int:pk>
+        pk = self.kwargs.get("pk")
+        # Get all review which have the watchlist is the pk
+        reviews = Review.objects.filter(watchlist=pk)
+        return reviews
+    
     
     
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
