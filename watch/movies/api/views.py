@@ -142,16 +142,19 @@ class StreamPlatformDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)      
 
 
-class StreamPlatformViewSet(viewsets.ViewSet):
+# class StreamPlatformViewSet(viewsets.ViewSet):
     
-    def list(self, request):
-        queryset = StreamPlatform.objects.all()
-        serializer = StreamPlatformSerializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+#     def list(self, request):
+#         queryset = StreamPlatform.objects.all()
+#         serializer = StreamPlatformSerializer(queryset, many=True, context={'request': request})
+#         return Response(serializer.data)
     
-    def retrieve(self, request, pk=None):
-        queryset = StreamPlatform.objects.all()
-        streamplatform = get_object_or_404(queryset, pk=pk)
-        serializer = StreamPlatformSerializer(streamplatform, context={'request': request})
-        return Response(serializer.data)    
-    
+#     def retrieve(self, request, pk=None):
+#         queryset = StreamPlatform.objects.all()
+#         streamplatform = get_object_or_404(queryset, pk=pk)
+#         serializer = StreamPlatformSerializer(streamplatform, context={'request': request})
+#         return Response(serializer.data)    
+
+class StreamPlatformViewSet(viewsets.ModelViewSet):
+    queryset = StreamPlatform.objects.all()
+    serializer_class = StreamPlatformSerializer    
