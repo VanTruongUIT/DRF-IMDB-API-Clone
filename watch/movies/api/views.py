@@ -24,7 +24,7 @@ class ReviewCreate(generics.CreateAPIView):
         # get the movie that have pk is pk
         
         watchlist = WatchList.objects.get(pk=pk)
-        log.info(f"truongtv16: {watchlist}")
+        log.msg(f"truongtv16: {watchlist}")
 
         serializer.save(watchlist=watchlist)
 
@@ -38,12 +38,14 @@ class ReviewList(generics.ListAPIView):
         pk = self.kwargs.get("pk")
         # Get all review which have the watchlist is the pk
         reviews = Review.objects.filter(watchlist=pk)
+        
         return reviews
     
     
     
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
+    log.msg(f"truongtv16 - queryset: {queryset}")
     serializer_class = ReviewSerializer
 
 
