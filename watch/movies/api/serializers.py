@@ -21,7 +21,7 @@ class WatchListSerializer(serializers.ModelSerializer):
         fields = "__all__"        
         
         
-class StreamPlatformSerializer(serializers.HyperlinkedModelSerializer):
+class StreamPlatformSerializer(serializers.ModelSerializer):
     
     # this field name is the related_name in the WatchList models.py
     watchlist = WatchListSerializer(many=True, read_only=True)

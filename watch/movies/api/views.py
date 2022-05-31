@@ -1,10 +1,13 @@
 from xml.dom import NotFoundErr
+
+from django.shortcuts import get_object_or_404
 from movies.models import StreamPlatform, WatchList
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
+from rest_framework import viewsets
 
 from structlog import get_logger
 
@@ -137,6 +140,18 @@ class StreamPlatformDetail(APIView):
         stream_flatform = StreamPlatform.objects.get(pk=pk)
         stream_flatform.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)      
+
+
+class StreamPlatformViewSet(viewsets.ViewSet):
     
+    def list(self, request):
+        queryset = StreamPlatform.objects.all()
+        serializer = StreamPlatformSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
     
+    def retrieve(self, request, pk=None):
+        queryset = StreamPlatform.objects.all()
+        streamplatform = get_object_or_404(queryset, pk=pk)
+        serializer = StreamPlatformSerializer(streamplatform, context={'request': request})
+        return Response(serializer.data)    
     
