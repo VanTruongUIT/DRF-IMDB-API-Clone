@@ -1,3 +1,4 @@
+from genericpath import exists
 from xml.dom import NotFoundErr
 
 from django.shortcuts import get_object_or_404
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import viewsets
+from rest_framework.validators import ValidationError
 
 from structlog import get_logger
 
@@ -21,15 +23,25 @@ log = get_logger()
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     
+    def get_queryset(self):
+        return Review.objects.all()
+    
     def perform_create(self, serializer):
         # get pk from url of movie
         pk = self.kwargs.get('pk')
         # get the movie that have pk is pk
         
         watchlist = WatchList.objects.get(pk=pk)
-        log.msg(f"truongtv16: {watchlist}")
+        # log.msg(f"truongtv16: {watchlist}")
+        
+        # check if the user already have the review for the moview -> we will not create a new review
+        current_user = self.request.user
+        review_queryset = Review.objects.filter(watchlist=watchlist, author=current_user)
+        
+        if review_queryset.exists():
+            raise ValidationError("You already have one review for this movie! You can not add new one!")
 
-        serializer.save(watchlist=watchlist)
+        serializer.save(watchlist=watchlist, author=current_user)
 
 class ReviewList(generics.ListAPIView):
     """Using concrete Class base view to handle the get, post, update, delete request quickly
@@ -48,7 +60,7 @@ class ReviewList(generics.ListAPIView):
     
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
-    log.msg(f"truongtv16 - queryset: {queryset}")
+    # log.msg(f"truongtv16 - queryset: {queryset}")
     serializer_class = ReviewSerializer
 
 

@@ -1,3 +1,4 @@
+from asyncore import read
 from dataclasses import fields
 from wsgiref.validate import validator
 from xml.parsers.expat import model
@@ -8,7 +9,7 @@ from movies.models import StreamPlatform, WatchList, Review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    
+    author = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Review
         exclude = ('watchlist', )
