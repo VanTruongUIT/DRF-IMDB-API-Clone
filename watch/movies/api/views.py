@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import viewsets
 from rest_framework.validators import ValidationError
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from structlog import get_logger
 
@@ -47,6 +48,8 @@ class ReviewList(generics.ListAPIView):
     """Using concrete Class base view to handle the get, post, update, delete request quickly
     If you want to customize your code, you can override it"""
     serializer_class = ReviewSerializer
+    # if you're login -> you have permission to create a new object, If not, you only can view 
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get_queryset(self):
         # get pk from url in browser, it mapping with <int:pk>
@@ -62,6 +65,8 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     # log.msg(f"truongtv16 - queryset: {queryset}")
     serializer_class = ReviewSerializer
+    # if you're login -> you have permission to create a new object, If not, you only can view 
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class WatchListList(APIView):

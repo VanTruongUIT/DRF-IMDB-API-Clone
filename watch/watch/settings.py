@@ -135,3 +135,11 @@ LOGGING = {
         'level': 'WARNING',
     },
 }
+
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         # need to login to access any pages
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
+# }
