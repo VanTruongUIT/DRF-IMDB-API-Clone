@@ -12,13 +12,14 @@ from rest_framework import viewsets
 from rest_framework.validators import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
+
 from structlog import get_logger
 
 from movies.models import Review
 
 from .serializers import ReviewSerializer, StreamPlatformSerializer, WatchListSerializer
 
-
+from .permisstions import AdminOrReadOnly, AuthorOrReadOnly
 
 log = get_logger()
 class ReviewCreate(generics.CreateAPIView):
@@ -66,7 +67,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     # log.msg(f"truongtv16 - queryset: {queryset}")
     serializer_class = ReviewSerializer
     # if you're login -> you have permission to create a new object, If not, you only can view 
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AuthorOrReadOnly]
 
 
 class WatchListList(APIView):
