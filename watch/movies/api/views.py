@@ -50,7 +50,7 @@ class ReviewList(generics.ListAPIView):
     If you want to customize your code, you can override it"""
     serializer_class = ReviewSerializer
     # if you're login -> you have permission to create a new object, If not, you only can view 
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         # get pk from url in browser, it mapping with <int:pk>

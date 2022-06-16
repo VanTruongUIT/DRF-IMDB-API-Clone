@@ -28,9 +28,9 @@ urlpatterns = [
     
     # path("reviews/", ReviewList.as_view(), name="review-list"),
     # path("reviews/<int:pk>", ReviewDetail.as_view(), name="review-detail"),
-    path("stream-platforms/<int:pk>/reviews-create/", ReviewCreate.as_view(), name="review-create"),
-    path("stream-platforms/<int:pk>/reviews/", ReviewList.as_view(), name="review-list"),
-    path("stream-platforms/reviews/<int:pk>", ReviewDetail.as_view(), name="review-detail"),
+    path("<int:pk>/reviews-create/", ReviewCreate.as_view(), name="review-create"),
+    path("<int:pk>/reviews/", ReviewList.as_view(), name="review-list"),
+    path("reviews/<int:pk>", ReviewDetail.as_view(), name="review-detail"),
     
 ]
 

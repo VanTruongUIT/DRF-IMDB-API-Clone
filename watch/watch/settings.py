@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'movies',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -137,9 +138,12 @@ LOGGING = {
 }
 
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         # need to login to access any pages
-#         'rest_framework.permissions.IsAuthenticated',
-#     ]
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        # need to login to access any pages
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
