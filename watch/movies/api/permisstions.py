@@ -2,7 +2,7 @@ from email import message
 from rest_framework import permissions
 
 # https://testdriven.io/blog/drf-permissions/
-class AdminOrReadOnly(permissions.IsAdminUser):
+class IsAdminOrReadOnly(permissions.IsAdminUser):
     message = "Only admin can perform the post request!!!"
     
     def has_permission(self, request, view):
@@ -13,7 +13,7 @@ class AdminOrReadOnly(permissions.IsAdminUser):
     
     
 
-class AuthorOrReadOnly(permissions.BasePermission):
+class IsAuthorOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True 

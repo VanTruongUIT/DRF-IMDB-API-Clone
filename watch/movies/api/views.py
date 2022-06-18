@@ -19,11 +19,14 @@ from movies.models import Review
 
 from .serializers import ReviewSerializer, StreamPlatformSerializer, WatchListSerializer
 
-from .permisstions import AdminOrReadOnly, AuthorOrReadOnly
+from .permisstions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 
 log = get_logger()
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
+    
+    permission_classes = [IsAuthenticated]
+    
     
     def get_queryset(self):
         return Review.objects.all()
@@ -50,7 +53,7 @@ class ReviewList(generics.ListAPIView):
     If you want to customize your code, you can override it"""
     serializer_class = ReviewSerializer
     # if you're login -> you have permission to create a new object, If not, you only can view 
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         # get pk from url in browser, it mapping with <int:pk>
@@ -67,10 +70,12 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     # log.msg(f"truongtv16 - queryset: {queryset}")
     serializer_class = ReviewSerializer
     # if you're login -> you have permission to create a new object, If not, you only can view 
-    permission_classes = [AuthorOrReadOnly]
+    permission_classes = [IsAuthorOrReadOnly]
 
 
 class WatchListList(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    
     def get(self, request):
         watch_list = WatchList.objects.all()
 
@@ -89,6 +94,8 @@ class WatchListList(APIView):
 
 
 class WatchListDetail(APIView):
+    
+    permission_classes = [IsAdminOrReadOnly]
     
     def get(self, request, pk):
         try:
@@ -116,6 +123,8 @@ class WatchListDetail(APIView):
     
     
 class StreamFlatformList(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    
     def get(self, request):
         stream_flatform = StreamPlatform.objects.all()
 
@@ -134,6 +143,7 @@ class StreamFlatformList(APIView):
 
 
 class StreamPlatformDetail(APIView):
+    permission_classes = [IsAdminOrReadOnly]
     
     def get(self, request, pk):
         try:
@@ -159,19 +169,6 @@ class StreamPlatformDetail(APIView):
         stream_flatform.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)      
 
-
-# class StreamPlatformViewSet(viewsets.ViewSet):
-    
-#     def list(self, request):
-#         queryset = StreamPlatform.objects.all()
-#         serializer = StreamPlatformSerializer(queryset, many=True, context={'request': request})
-#         return Response(serializer.data)
-    
-#     def retrieve(self, request, pk=None):
-#         queryset = StreamPlatform.objects.all()
-#         streamplatform = get_object_or_404(queryset, pk=pk)
-#         serializer = StreamPlatformSerializer(streamplatform, context={'request': request})
-#         return Response(serializer.data)    
 
 class StreamPlatformViewSet(viewsets.ModelViewSet):
     queryset = StreamPlatform.objects.all()
