@@ -26,7 +26,8 @@ def register_view(request):
             user = serializer.save()
             
             data['response'] = 'Registration successful!'
-            data['username'] = user.username 
+            data['username'] = user.username
+            data['email'] = user.email
             
             token = Token.objects.get(user=user).key
             data['token'] = token 

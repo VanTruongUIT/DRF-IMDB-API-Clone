@@ -2,6 +2,7 @@ from genericpath import exists
 from xml.dom import NotFoundErr
 
 from django.shortcuts import get_object_or_404
+from yaml import serialize
 from movies.models import StreamPlatform, WatchList
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -10,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import viewsets
 from rest_framework.validators import ValidationError
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 
 from structlog import get_logger
@@ -45,8 +46,17 @@ class ReviewCreate(generics.CreateAPIView):
         
         if review_queryset.exists():
             raise ValidationError("You already have one review for this movie! You can not add new one!")
+        if watchlist.number_of_ratings == 0:
+            watchlist.avg_rating = serializer.validated_data['rating']
+        else:
+            watchlist.avg_rating = (watchlist.avg_rating + serializer.validated_data['rating']) / 2            
+        watchlist.number_of_ratings += 1
+        
+        watchlist.save()
 
         serializer.save(watchlist=watchlist, author=current_user)
+        
+    
 
 class ReviewList(generics.ListAPIView):
     """Using concrete Class base view to handle the get, post, update, delete request quickly
@@ -172,4 +182,6 @@ class StreamPlatformDetail(APIView):
 
 class StreamPlatformViewSet(viewsets.ModelViewSet):
     queryset = StreamPlatform.objects.all()
-    serializer_class = StreamPlatformSerializer    
+    serializer_class = StreamPlatformSerializer   
+    permission_classes = [IsAdminOrReadOnly]
+     
