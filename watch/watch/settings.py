@@ -141,10 +141,17 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication', 
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         # need to login to access any pages
         'rest_framework.permissions.IsAuthenticated',
     ]
+}
+
+SIMPLE_JWT = {
+    # When we call to the view TokenRefreshView to generate new access token, if it set to True -> the new refresh token also was created new one
+    'ROTATE_REFRESH_TOKENS': True,
+    
 }
