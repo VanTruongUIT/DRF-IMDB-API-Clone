@@ -39,8 +39,14 @@ class UserReviewList(generics.ListAPIView):
     """Using ListAPIView"""
     serializer_class = ReviewSerializer
     
+    # def get_queryset(self):
+    #     username = self.kwargs.get("username")
+    #     reviews = Review.objects.filter(author__username=username)
+        
+    #     return reviews
+    
     def get_queryset(self):
-        username = self.kwargs.get("username")
+        username = self.request.query_params.get('username')
         reviews = Review.objects.filter(author__username=username)
         
         return reviews
