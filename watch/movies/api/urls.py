@@ -6,6 +6,7 @@ from rest_framework.authtoken import views
 
 # from .views import get_all_movies, get_detail_movies
 from .views import (
+    UserReviewList,
     WatchListList, 
     WatchListDetail, 
     StreamFlatformList, 
@@ -31,7 +32,8 @@ urlpatterns = [
     # path("reviews/<int:pk>", ReviewDetail.as_view(), name="review-detail"),
     path("<int:pk>/reviews-create/", ReviewCreate.as_view(), name="review_create"),
     path("<int:pk>/reviews/", ReviewList.as_view(), name="review_list"),
-    path("reviews/<int:pk>/", ReviewDetail.as_view(), name=" "),
+    path("reviews/<int:pk>/", ReviewDetail.as_view(), name="review_detail"),
+    path("reviews/<str:username>/", UserReviewList.as_view(), name="user_review_list"),
     
 ]
 

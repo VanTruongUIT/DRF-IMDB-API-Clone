@@ -33,6 +33,19 @@ from .throttling import (ReviewCreateThrottle,
                          )
 
 log = get_logger()
+
+
+class UserReviewList(generics.ListAPIView):
+    """Using ListAPIView"""
+    serializer_class = ReviewSerializer
+    
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        reviews = Review.objects.filter(author__username=username)
+        
+        return reviews
+
+
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     
