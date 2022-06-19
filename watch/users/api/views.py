@@ -3,11 +3,9 @@ from rest_framework.decorators import api_view
 from .serializers import RegistrationSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt.tokens import RefreshToken
 
-# from users import models
-
-# from users import models
+from users import models
 
 @api_view(["POST"])
 def logout_view(request):
@@ -32,14 +30,14 @@ def register_view(request):
             data['username'] = user.username
             data['email'] = user.email
             
-            # token = Token.objects.get(user=user).key
-            # data['token'] = token 
+            token = Token.objects.get(user=user).key
+            data['token'] = token 
             
-            refresh = RefreshToken.for_user(user)
-            data['token'] = {
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }
+            # refresh = RefreshToken.for_user(user)
+            # data['token'] = {
+            #     'refresh': str(refresh),
+            #     'access': str(refresh.access_token),
+            # }
             
             
         else:

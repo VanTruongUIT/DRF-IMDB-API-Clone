@@ -12,21 +12,33 @@ from rest_framework import generics, mixins
 from rest_framework import viewsets
 from rest_framework.validators import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import (UserRateThrottle, 
+                                       AnonRateThrottle,
+)
 
 
 from structlog import get_logger
 
 from movies.models import Review
 
-from .serializers import ReviewSerializer, StreamPlatformSerializer, WatchListSerializer
+from .serializers import (ReviewSerializer, 
+                          StreamPlatformSerializer, 
+                          WatchListSerializer,
+)
 
 from .permisstions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+
+from .throttling import (ReviewCreateThrottle, 
+                         ReviewListThrottle,
+                         )
 
 log = get_logger()
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     
     permission_classes = [IsAuthenticated]
+    
+    throttle_classes = [ReviewCreateThrottle]
     
     
     def get_queryset(self):
@@ -63,7 +75,10 @@ class ReviewList(generics.ListAPIView):
     If you want to customize your code, you can override it"""
     serializer_class = ReviewSerializer
     # if you're login -> you have permission to create a new object, If not, you only can view 
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthorOrReadOnly]
+    # throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    throttle_classes = [ReviewListThrottle, AnonRateThrottle]
+    
     
     def get_queryset(self):
         # get pk from url in browser, it mapping with <int:pk>
@@ -81,6 +96,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
     # if you're login -> you have permission to create a new object, If not, you only can view 
     permission_classes = [IsAuthorOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
 
 class WatchListList(APIView):
