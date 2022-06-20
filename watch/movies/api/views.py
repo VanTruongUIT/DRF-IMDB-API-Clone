@@ -1,8 +1,6 @@
 from genericpath import exists
-from xml.dom import NotFoundErr
 
 from django.shortcuts import get_object_or_404
-from yaml import serialize
 from movies.models import StreamPlatform, WatchList
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -15,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import (UserRateThrottle, 
                                        AnonRateThrottle,
 )
+from django_filters import rest_framework as filters
 
 
 from structlog import get_logger
@@ -97,6 +96,8 @@ class ReviewList(generics.ListAPIView):
     # permission_classes = [IsAuthorOrReadOnly]
     # throttle_classes = [UserRateThrottle, AnonRateThrottle]
     throttle_classes = [ReviewListThrottle, AnonRateThrottle]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('author__username', 'active')    
     
     
     def get_queryset(self):
@@ -116,6 +117,14 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     # if you're login -> you have permission to create a new object, If not, you only can view 
     permission_classes = [IsAuthorOrReadOnly]
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
+
+
+class WatchListGenericsList(generics.ListAPIView):
+    watch_list = WatchList.objects.all()
+    serializer_class = WatchListSerializer
+    
+    filter_backends = [filters.SearchFilter]
+    search_fields = ('title', 'stream_platform__name')
 
 
 class WatchListList(APIView):

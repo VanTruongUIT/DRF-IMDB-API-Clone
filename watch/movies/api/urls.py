@@ -15,6 +15,7 @@ from .views import (
     ReviewDetail,
     ReviewCreate,
     StreamPlatformViewSet,
+    WatchListGenericsList
 )
 
 router = DefaultRouter()
@@ -22,6 +23,7 @@ router.register("stream-platforms", StreamPlatformViewSet, basename="streamplatf
 
 urlpatterns = [
     path("list/", WatchListList.as_view(), name="watchlist_list"),
+    path("generics-list/", WatchListGenericsList.as_view(), name="watchlist_generics_list"),
     path("list/<int:pk>/", WatchListDetail.as_view(), name="watchlist_detail"),
     
     path("", include(router.urls)),
