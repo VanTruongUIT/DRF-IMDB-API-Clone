@@ -30,6 +30,7 @@ from .permisstions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from .throttling import (ReviewCreateThrottle, 
                          ReviewListThrottle,
                          )
+from django_filters.rest_framework import DjangoFilterBackend
 
 log = get_logger()
 
@@ -122,9 +123,15 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 class WatchListGenericsList(generics.ListAPIView):
     watch_list = WatchList.objects.all()
     serializer_class = WatchListSerializer
+
+    # filter_backends = [filters.DjangoFilterBackend]
+    # search_fields = ('title', 'stream_platform__name')
+
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ('title', 'stream_platform__name')
     
-    filter_backends = [filters.SearchFilter]
-    search_fields = ('title', 'stream_platform__name')
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ('avg_rating',)
 
 
 class WatchListList(APIView):
