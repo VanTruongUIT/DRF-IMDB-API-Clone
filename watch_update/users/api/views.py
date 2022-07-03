@@ -44,4 +44,4 @@ def register_view(request):
             data = serializer.errors
             
         print(data)
-        return Response(data)
+        return Response(data, status=status.HTTP_201_CREATED)
