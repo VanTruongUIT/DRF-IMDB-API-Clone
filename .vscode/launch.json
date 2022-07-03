@@ -7,8 +7,9 @@
         {
             "name": "Python: Django",
             "type": "python",
+            "stopOnEntry": false,
             "request": "launch",
-            "program": "${workspaceFolder}\\watch\\manage.py",
+            "program": "${workspaceFolder}/watch/manage.py",
             "args": [
                 "runserver"
             ],

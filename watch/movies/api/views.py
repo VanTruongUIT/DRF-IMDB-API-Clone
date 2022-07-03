@@ -19,7 +19,7 @@ from django_filters import rest_framework as filters
 from structlog import get_logger
 
 from movies.models import Review
-
+from movies.api.paginations import WatchListPageNumberPagination, WatchListCursorPagination
 from .serializers import (ReviewSerializer, 
                           StreamPlatformSerializer, 
                           WatchListSerializer,
@@ -121,8 +121,11 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class WatchListGenericsList(generics.ListAPIView):
-    watch_list = WatchList.objects.all()
+    queryset = WatchList.objects.all()
     serializer_class = WatchListSerializer
+    # pagination_class = WatchListPageNumberPagination
+    pagination_class = WatchListCursorPagination
+    
 
     # filter_backends = [filters.DjangoFilterBackend]
     # search_fields = ('title', 'stream_platform__name')
@@ -130,8 +133,9 @@ class WatchListGenericsList(generics.ListAPIView):
     # filter_backends = [filters.SearchFilter]
     # search_fields = ('title', 'stream_platform__name')
     
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ('avg_rating',)
+    # filter_backends = [filters.OrderingFilter]
+    # ordering_fields = ('avg_rating',)
+
 
 
 class WatchListList(APIView):

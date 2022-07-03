@@ -1,9 +1,3 @@
-from asyncore import read
-from dataclasses import fields
-from wsgiref.validate import validator
-from xml.parsers.expat import model
-from django.forms import IntegerField
-from numpy import source
 from rest_framework import serializers
 
 from movies.models import StreamPlatform, WatchList, Review
