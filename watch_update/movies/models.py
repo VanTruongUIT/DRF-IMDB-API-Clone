@@ -13,6 +13,7 @@ class StreamPlatform(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class WatchList(models.Model):
     title = models.CharField(max_length=200)
     storyline = models.CharField(max_length=200)
@@ -28,6 +29,7 @@ class WatchList(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
 
 class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
