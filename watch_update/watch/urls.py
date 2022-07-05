@@ -15,12 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework_swagger.views import get_swagger_view
 
+
+schema_view = get_swagger_view(title='IMDB API')
 
 urlpatterns = [
     path('dashboard/', admin.site.urls),
     path('api/movies/', include("movies.api.urls")),
     path('api/users/', include("users.api.urls")),
+    path('swagger/', schema_view),
     # path('api-auth/', include("rest_framework.urls")),
 
 ]
