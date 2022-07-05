@@ -1,36 +1,22 @@
-from genericpath import exists
-
 from django.shortcuts import get_object_or_404
-from movies.models import StreamPlatform, WatchList
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import generics, mixins
-from rest_framework import viewsets
-from rest_framework.validators import ValidationError
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.throttling import (UserRateThrottle, 
-                                       AnonRateThrottle,
-)
 from django_filters import rest_framework as filters
-
-
+from django_filters.rest_framework import DjangoFilterBackend
+from movies.api.paginations import (WatchListCursorPagination,
+                                    WatchListPageNumberPagination)
+from movies.models import Review, StreamPlatform, WatchList
+from rest_framework import generics, mixins, status, viewsets
+from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
+from rest_framework.validators import ValidationError
+from rest_framework.views import APIView
 from structlog import get_logger
 
-from movies.models import Review
-from movies.api.paginations import WatchListPageNumberPagination, WatchListCursorPagination
-from .serializers import (ReviewSerializer, 
-                          StreamPlatformSerializer, 
-                          WatchListSerializer,
-)
-
 from .permisstions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-
-from .throttling import (ReviewCreateThrottle, 
-                         ReviewListThrottle,
-                         )
-from django_filters.rest_framework import DjangoFilterBackend
+from .serializers import (ReviewSerializer, StreamPlatformSerializer,
+                          WatchListSerializer)
+from .throttling import ReviewCreateThrottle, ReviewListThrottle
 
 log = get_logger()
 
