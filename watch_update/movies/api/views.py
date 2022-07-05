@@ -24,13 +24,7 @@ log = get_logger()
 class UserReviewList(generics.ListAPIView):
     """Using ListAPIView"""
     serializer_class = ReviewSerializer
-    
-    # def get_queryset(self):
-    #     username = self.kwargs.get("username")
-    #     reviews = Review.objects.filter(author__username=username)
-        
-    #     return reviews
-    
+
     def get_queryset(self):
         username = self.request.query_params.get('username')
         reviews = Review.objects.filter(author__username=username)
@@ -44,7 +38,6 @@ class ReviewCreate(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
     throttle_classes = [ReviewCreateThrottle]
-    
     
     def get_queryset(self):
         return Review.objects.all()
@@ -72,7 +65,6 @@ class ReviewCreate(generics.CreateAPIView):
         watchlist.save()
 
         serializer.save(watchlist=watchlist, author=current_user)
-        
     
 
 class ReviewList(generics.ListAPIView):
@@ -85,8 +77,7 @@ class ReviewList(generics.ListAPIView):
     throttle_classes = [ReviewListThrottle, AnonRateThrottle]
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('author__username', 'active')    
-    
-    
+
     def get_queryset(self):
         # get pk from url in browser, it mapping with <int:pk>
         pk = self.kwargs.get("pk")
@@ -94,8 +85,7 @@ class ReviewList(generics.ListAPIView):
         reviews = Review.objects.filter(watchlist=pk)
         
         return reviews
-    
-    
+
     
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
@@ -111,17 +101,6 @@ class WatchListGenericsList(generics.ListAPIView):
     serializer_class = WatchListSerializer
     # pagination_class = WatchListPageNumberPagination
     pagination_class = WatchListCursorPagination
-    
-
-    # filter_backends = [filters.DjangoFilterBackend]
-    # search_fields = ('title', 'stream_platform__name')
-
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ('title', 'stream_platform__name')
-    
-    # filter_backends = [filters.OrderingFilter]
-    # ordering_fields = ('avg_rating',)
-
 
 
 class WatchListList(APIView):
@@ -170,55 +149,7 @@ class WatchListDetail(APIView):
     def delete(self, request, pk):
         watch_list = WatchList.objects.get(pk=pk)
         watch_list.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)      
-    
-    
-class StreamFlatformList(APIView):
-    permission_classes = [IsAdminOrReadOnly]
-    
-    def get(self, request):
-        stream_flatform = StreamPlatform.objects.all()
-
-        serializers = StreamPlatformSerializer(stream_flatform, many=True, context={'request': request})
-        return Response(serializers.data)
-
-
-    def post(self, request):
-        # Get data from field which from client input. After that serializer it
-        serializer = StreamPlatformSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-                
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)       
-
-
-class StreamPlatformDetail(APIView):
-    permission_classes = [IsAdminOrReadOnly]
-    
-    def get(self, request, pk):
-        try:
-            stream_flatform = StreamPlatform.objects.get(pk=pk)
-        except StreamPlatform.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)        
-        
-        if request.method == "GET":
-            serializer = StreamPlatformSerializer(stream_flatform, context={'request': request})
-            return Response(serializer.data)
-    
-    def put(self, request, pk):
-        stream_flatform = StreamPlatform.objects.get(pk=pk)
-
-        serializer = StreamPlatformSerializer(stream_flatform, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
-    def delete(self, request, pk):
-        stream_flatform = StreamPlatform.objects.get(pk=pk)
-        stream_flatform.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)      
+        return Response(status=status.HTTP_204_NO_CONTENT)   
 
 
 class StreamPlatformViewSet(viewsets.ModelViewSet):
